@@ -14,6 +14,9 @@ A simple, clean and very modular status bar setter for the dwm window manager wr
 
 *Note: requires [the status2d dwm patch](https://dwm.suckless.org/patches/status2d/)*
 
+### Installation
+
+The install.sh script copies the binary into /usr/local/bin. Simply run the binary as a process in your xinitrc.
 
 
 ### Example configurations
