@@ -26,8 +26,8 @@ The default configuration
 ```rust
 let modules = [
     "dwmbar".to_string(),
-    modules::mem::used(),
-    modules::clock::formatted("%Y-%m-%d %H:%M"),
+    mem::used(),
+    clock::formatted("%Y-%m-%d %H:%M"),
 ];
 // Define your separator here (it will be inserted between modules, optional)
 let separator = " ";
@@ -52,14 +52,14 @@ let modules = [
         colors::foreground("#787878"),
         "MEM ".to_string(),
         colors::foreground("#d8d8d8"),
-        modules::mem::used(),
+        mem::used(),
         colors::foreground("#787878"),
         "CPU ".to_string(),
         colors::foreground("#d8d8d8"),
-        modules::cpu::average_load(),
+        cpu::average_load(),
         colors::background("#d8d8d8"),
         colors::foreground("#000000"),
-        modules::clock::formatted("%m-%d %H:%M"),
+        clock::formatted("%m-%d %H:%M"),
     ];
     // Define your separator here (it will be inserted between modules, optional)
     let separator = " ";
