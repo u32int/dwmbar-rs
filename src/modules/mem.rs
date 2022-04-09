@@ -18,5 +18,5 @@ pub fn used() -> String {
     // as defined in https://gitlab.com/procps-ng/procps/-/blob/newlib/free.c
     let mem_cached_all = meminfo["Cached"] + meminfo["SReclaimable"];
     let used = (meminfo["MemTotal"] - meminfo["Buffers"] - mem_cached_all - meminfo["MemFree"]) / 1024;
-    return used.to_string() + "MB";
+    return used.to_string() + "M";
 }

@@ -54,7 +54,6 @@ impl Data {
         if ENABLE_NET_OPERATIONS {
             self.wttr = modules::wttr::update_weather();
             self.updates = modules::update::checkupdates();
-            println!("updated");
         }
     }
 }
