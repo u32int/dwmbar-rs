@@ -15,6 +15,8 @@ mod modules {
     pub mod wttr;
 }
 
+use modules::*;
+
 // -- General settings -- 
 static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
 static UPDATE_CHECK_DELAY: u32 = 3600; // The number of refresh bar refresh cycles before checking for updates.
@@ -24,8 +26,8 @@ fn build_bar(persistent: &Data) -> String {
     // Define your modules here
     let modules = [
         "dwmbar".to_string(),
-        modules::mem::used(),
-        modules::clock::formatted("%Y-%m-%d %H:%M:%S"),
+        mem::used(),
+        clock::formatted("%Y-%m-%d %H:%M:%S"),
     ];
     // Define your separator here (it will be inserted between modules, optional)
     let separator = " ";
