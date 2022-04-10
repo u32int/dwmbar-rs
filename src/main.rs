@@ -34,7 +34,7 @@ fn build_bar(persistent: &Data) -> String {
 
 
     // Build the final string from modules.
-    let mut ret = String::from("");
+    let mut ret = String::new();
     for module in &modules {
         ret.push_str(module.as_str());
         if module != &modules[modules.len()-1] {
@@ -67,9 +67,9 @@ fn main() {
     loop {
         refresh_counter += 1;
         let bar = build_bar(&persistent);
-        if let Ok(mut proc) = xsetrootcmd.arg("-name").arg(bar.as_str()).spawn() {
+        if let Ok(mut child) = xsetrootcmd.arg("-name").arg(bar.as_str()).spawn() {
             // Wait for the process to end. Not doing this leads to "zombie" processes.
-            proc.wait().expect("process already over.");
+            child.wait().expect("process already over.");
         }
         thread::sleep(time::Duration::from_millis(BAR_REFRESH_RATE_MILIS));
         if refresh_counter > UPDATE_CHECK_DELAY {
