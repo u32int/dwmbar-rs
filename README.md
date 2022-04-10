@@ -33,7 +33,7 @@ let modules = [
 let separator = " ";
 ```
 
-default-screenshot-here
+<img alt="default-config" src="https://raw.githubusercontent.com/vshatgit/dwmbar/main/imgs/exampledefault.png">
 
 
 
@@ -69,8 +69,7 @@ let modules = [
 
 and would result in a bar looking like this
 
-second-screenshot-here
-
+<img alt="default-config" src="https://raw.githubusercontent.com/vshatgit/dwmbar/main/imgs/exampleone.png">
 
 ### Contributing
 
