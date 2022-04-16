@@ -2,8 +2,6 @@
 
 A simple, clean and very modular status bar setter for the dwm window manager written in rust.
 
-
-
 ### Features
 
 - Configured in the language it is written in
@@ -17,7 +15,6 @@ A simple, clean and very modular status bar setter for the dwm window manager wr
 ### Installation
 
 The install.sh script copies the binary into /usr/local/bin. Simply run the binary as a process in your xinitrc.
-
 
 ### Example configurations
 
@@ -34,8 +31,6 @@ let separator = " ";
 ```
 
 <img alt="default-config" src="https://raw.githubusercontent.com/vshatgit/dwmbar/main/imgs/exampledefault.png">
-
-
 
 A more complete configuration would look something like this.
 
@@ -63,13 +58,19 @@ let modules = [
     ];
     // Define your separator here (it will be inserted between modules, optional)
     let separator = " ";
-
-
 ```
 
 and would result in a bar looking like this
 
 <img alt="default-config" src="https://raw.githubusercontent.com/vshatgit/dwmbar/main/imgs/exampleone.png">
+
+#### Planned features
+
+- [ ] Different refresh times for different modules (currently only implemented for persistent data)
+
+- [ ] Many more modules
+
+
 
 ### Contributing
 
