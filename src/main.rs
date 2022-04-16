@@ -63,14 +63,16 @@ fn main() {
     let mut persistent: Data = Data { wttr: "".into(), updates: "".into() };
     persistent.update_data();
 
-    let mut xsetrootcmd = Command::new("xsetroot");
     loop {
         refresh_counter += 1;
         let bar = build_bar(&persistent);
-        if let Ok(mut child) = xsetrootcmd.arg("-name").arg(bar.as_str()).spawn() {
-            // Wait for the process to end. Not doing this leads to "zombie" processes.
-            child.wait().expect("process already over.");
-        }
+        match Command::new("xsetroot").arg("-name").arg(bar.as_str()).spawn() {
+            Ok(mut child) => child.wait().expect("process already over."),
+            Err(e) => {
+                println!("Something went wrong with cmd\nxsetroot -name {}\n", &bar);
+                panic!("{}", e);
+            }
+        };
         thread::sleep(time::Duration::from_millis(BAR_REFRESH_RATE_MILIS));
         if refresh_counter > UPDATE_CHECK_DELAY {
             refresh_counter = 0;        
