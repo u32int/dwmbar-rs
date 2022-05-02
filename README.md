@@ -39,7 +39,7 @@ let modules: Vec<&dyn BarModule> = vec!{
 let separator = " ";
 ```
 
-<img alt="default-config" src="https://raw.githubusercontent.com/vshatgit/dwmbar/main/imgs/exampledefault.png">
+<img title="" src="imgs/exampledefault.png" alt="">
 
 A more complete configuration would look something like this.
 
@@ -89,7 +89,7 @@ let separator = " ";
 
 and would result in a bar looking like this
 
-<img alt="default-config" src="https://raw.githubusercontent.com/vshatgit/dwmbar/main/imgs/exampleone.png">
+<img title="" src="imgs/exampleone.png" alt="default-config">
 
 #### Planned features
 
