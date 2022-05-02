@@ -1,6 +1,6 @@
 # dwmbar
 
-A simple, clean and very modular status bar setter for the dwm window manager written in rust.
+A modular status bar setter for dwm, written in rust.
 
 ### Features
 
@@ -8,25 +8,34 @@ A simple, clean and very modular status bar setter for the dwm window manager wr
 
 - Full hex color support*
 
+- Custom refresh rates per module (or even module instance!)
+
 - Easily extensible
 
 *Note: requires [the status2d dwm patch](https://dwm.suckless.org/patches/status2d/)*
 
 ### Installation
 
-The install.sh script copies the binary into /usr/local/bin. Simply run the binary as a process in your xinitrc.
+The install.sh script copies the binary into /usr/local/bin. Simply run the binary as a process in your xinitrc/init script.
 
 ### Example configurations
 
-The default configuration
+The configuration can be found in the main.rs in the main function. This is the default configuration.
 
 ```rust
-let modules = [
-    "dwmbar".to_string(),
-    mem::used(),
-    clock::formatted("%Y-%m-%d %H:%M"),
-];
-// Define your separator here (it will be inserted between modules, optional)
+let modules: Vec<&dyn BarModule> = vec!{
+    &Text { text: "dwmbar" },
+    &Mem {
+        format: "{used}",
+        refresh_rate: 5,
+        unit: MemoryUnit::MB,
+    },
+    &Clock {
+        format: "%m-%d %H:%M",
+        refresh_rate: 1,
+    },
+};
+
 let separator = " ";
 ```
 
@@ -35,29 +44,47 @@ let separator = " ";
 A more complete configuration would look something like this.
 
 ```rust
-let modules = [
-        colors::foreground("#787878"),
-        "WTR".to_string(),
-        colors::foreground("#d8d8d8"),
-        persistent.wttr.clone(),
-        colors::foreground("#787878"),
-        "UPD".to_string(),
-        colors::foreground("#d8d8d8"),
-        persistent.updates.clone(),
-        colors::foreground("#787878"),
-        "MEM ".to_string(),
-        colors::foreground("#d8d8d8"),
-        mem::used(),
-        colors::foreground("#787878"),
-        "CPU ".to_string(),
-        colors::foreground("#d8d8d8"),
-        cpu::average_load(),
-        colors::background("#d8d8d8"),
-        colors::foreground("#000000"),
-        clock::formatted("%m-%d %H:%M"),
-    ];
-    // Define your separator here (it will be inserted between modules, optional)
-    let separator = " ";
+let modules: Vec<&dyn BarModule> = vec!{
+    &Color { background: None, foreground: Some("#787878"), },
+    &Text { text: "WTR" },
+    &Color { background: None, foreground: Some("#d8d8d8"), },
+    &Wttr {
+        location: "Warsaw",
+        refresh_rate: 3600,
+    },
+    &Color { background: None, foreground: Some("#787878"), },
+    &Text { text: "UPD" },
+    &Color { background: None, foreground: Some("#d8d8d8"), },
+    &Updates {
+        format: "{count}",
+        refresh_rate: 7200,
+        update_cmd: "checkupdates",
+    },
+    &Color { background: None, foreground: Some("#787878"), },
+    &Text { text: "MEM" },
+    &Color { background: None, foreground: Some("#d8d8d8"), },
+    &Mem {
+        format: "{used}",
+        refresh_rate: 5,
+        unit: MemoryUnit::MB,
+    },
+    &Color { background: None, foreground: Some("#787878"), },
+    &Text { text: "CPU" },
+    &Color { background: None, foreground: Some("#d8d8d8"), },
+    &Cpu {
+        format: "{load}",
+        refresh_rate: 1,
+    },
+    &Color { background: Some("#d8d8d8"), foreground: Some("#000000"), },
+    &Clock {
+        format: "%m-%d %H:%M",
+        refresh_rate: 1,
+    },
+};
+
+let separator = " ";
+
+
 ```
 
 and would result in a bar looking like this
@@ -66,11 +93,9 @@ and would result in a bar looking like this
 
 #### Planned features
 
-- [ ] Different refresh times for different modules (currently only implemented for persistent data)
+- [x] Different refresh times for different modules (currently only implemented for persistent data)
 
 - [ ] Many more modules
-
-
 
 ### Contributing
 

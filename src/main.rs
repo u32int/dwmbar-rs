@@ -1,71 +1,50 @@
-use std::process::Command;
 use std::{thread, time};
+use std::process::Command;
 
-mod modules { 
-    /*  
-    The colors module is optional and gives you the ability to add colors to your bar.
-    It only works if you have this patch installed: https://dwm.suckless.org/patches/status2d/ 
-    */
-    pub mod colors;     
-
-    pub mod clock;
-    pub mod cpu;
-    pub mod mem;
-    pub mod update;
-    pub mod wttr;
-}
-
+mod modules;
 use modules::*;
 
 // -- General settings -- 
 static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
-static UPDATE_CHECK_DELAY: u32 = 3600; // The number of refresh bar refresh cycles before checking for updates.
-static ENABLE_NET_OPERATIONS: bool = false; // Enables or disables all operations requiring internet access. ex. updates, weather.
-
-fn build_bar(persistent: &Data) -> String {
-    // Define your modules here
-    let modules = [
-        "dwmbar".to_string(),
-        mem::used(),
-        clock::formatted("%Y-%m-%d %H:%M:%S"),
-    ];
-    // Define your separator here (it will be inserted between modules, optional)
-    let separator = " ";
-
-
-    // Build the final string from modules.
-    let mut ret = String::new();
-    for module in &modules {
-        ret.push_str(module.as_str());
-        if module != &modules[modules.len()-1] {
-            ret.push_str(separator);
-        }
-    }
-    return ret;
-}
-
-struct Data {
-    wttr: String,
-    updates: String,
-}
-
-impl Data {
-    fn update_data(&mut self) {
-        if ENABLE_NET_OPERATIONS {
-            self.wttr = modules::wttr::update_weather();
-            self.updates = modules::update::checkupdates();
-        }
-    }
-}
 
 fn main() {
-    let mut refresh_counter = 0;
-    let mut persistent: Data = Data { wttr: "".into(), updates: "".into() };
-    persistent.update_data();
+    // module definitions
+    // refresh_rate usually refers to how many bar refreshes (by default - 1000ms so seconds)
+    // should happen before updating the value.
+    let modules: Vec<&dyn BarModule> = vec!{
+        &Text { text: "dwmbar" },
+        &Mem {
+            format: "{used}",
+            refresh_rate: 5,
+            unit: MemoryUnit::MB,
+        },
+        &Clock {
+            format: "%m-%d %H:%M",
+            refresh_rate: 1,
+        },
+   };
 
+    // Define your separator here (it will be inserted between modules, optional)
+    // for no separator set it to ""
+    let separator = " ";
+
+    // Build the cache of last known values
+    let mut bar_cache: Vec<String> = Vec::new();
+    for _ in &modules { bar_cache.push("".to_owned()); }
+
+    let mut timer = 0;
     loop {
-        refresh_counter += 1;
-        let bar = build_bar(&persistent);
+        // get new values
+        let values = get_values(&modules, timer);
+        // replace values in cache with new values if changed
+        for i in 0..bar_cache.len() {
+            if values[i] != bar_cache[i] && values[i] != "" {
+                bar_cache[i] = values[i].clone();
+            }
+        }
+        // convert bar_cache: Vec<String> -> bar: String
+        let bar = vec_to_string(&bar_cache, Some(separator));
+        // set the bar
         match Command::new("xsetroot").arg("-name").arg(bar.as_str()).spawn() {
             Ok(mut child) => child.wait().expect("process already over."),
             Err(e) => {
@@ -74,9 +53,31 @@ fn main() {
             }
         };
         thread::sleep(time::Duration::from_millis(BAR_REFRESH_RATE_MILIS));
-        if refresh_counter > UPDATE_CHECK_DELAY {
-            refresh_counter = 0;        
-            persistent.update_data();
+        timer += 1;
+    }
+}
+
+fn vec_to_string(cache: &Vec<String>, separator: Option<&'static str>) -> String {
+    let mut result = String::new();
+    for elem in cache  {
+        result.push_str(elem.as_str());
+        if separator.is_some() && elem != cache.last().expect("Error: vector has no last element") {
+            result.push_str(separator.unwrap());
         }
     }
+    return result;
+}
+
+
+// Update module values if timer matches refresh rate
+fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
+    let mut constructed: Vec<String> = Vec::new();
+    for module in modules {
+        if timer % module.get_timer() == 0 {
+            constructed.push(module.get_value());
+        } else {
+            constructed.push("".to_string());
+        }
+    }
+    return constructed;
 }
