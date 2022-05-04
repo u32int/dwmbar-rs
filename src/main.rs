@@ -1,15 +1,17 @@
+#![allow(unused_imports)]
+
 use std::{thread, time};
 use std::process::Command;
 
-mod modules;
-use modules::*;
 
 // -- General settings -- 
 static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
 
 fn main() {
-    // module definitions
-    // refresh_rate usually refers to how many bar refreshes (by default - 1000ms so seconds)
+    // -- CONFIGURATION -- 
+
+    // module definitions 
+    // refresh_rate refers to how many bar refreshes (by default - 1000ms so seconds)
     // should happen before updating the value.
     let modules: Vec<&dyn BarModule> = vec!{
         &Text { text: "dwmbar" },
@@ -19,7 +21,7 @@ fn main() {
             unit: MemoryUnit::MB,
         },
         &Clock {
-            format: "%m-%d %H:%M",
+            clock_format: "%m-%d %H:%M",
             refresh_rate: 1,
         },
    };
@@ -27,6 +29,9 @@ fn main() {
     // Define your separator here (it will be inserted between modules, optional)
     // for no separator set it to ""
     let separator = " ";
+
+    // -- end CONFIGURATION -- 
+
 
     // Build the cache of last known values
     let mut bar_cache: Vec<String> = Vec::new();
@@ -81,3 +86,29 @@ fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
     }
     return constructed;
 }
+
+// Module structure
+mod modules {
+    // Barmodule definitions
+    pub mod definitions;
+
+    // modules
+    pub mod text;
+    pub mod mem;
+    pub mod cpu;
+    pub mod clock;
+    pub mod color;
+    pub mod updates;
+    pub mod wttr;
+    pub mod disk;
+}
+// This shortens the use statements a bit.
+macro_rules! autousemod {
+    ($($module:ident),+) => {
+	$(
+	    use modules::$module::*;
+	)+
+    };
+}
+autousemod![definitions, text, mem, cpu, clock, color, updates, wttr, disk];
+

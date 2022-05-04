@@ -93,7 +93,7 @@ and would result in a bar looking like this
 
 #### Planned features
 
-- [x] Different refresh times for different modules (currently only implemented for persistent data)
+- [x] Different refresh times for different modules
 
 - [ ] Many more modules
 
