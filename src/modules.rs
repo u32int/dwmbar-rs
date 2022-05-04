@@ -43,7 +43,7 @@ pub trait BarModule {
         for keyword in get_keywords(format) {
             result += self.get_func_output(keyword).as_str();
         };
-        return result;
+        result
     }
 }
 
@@ -52,7 +52,7 @@ fn get_keywords(format: String) -> Vec<String> {
     for part in format.split(&['{', '}']) {
         result.push(part.to_string());
     }
-    return result
+    result
 }
 
 // MODULE DEFINITIONS
@@ -66,10 +66,10 @@ pub struct Text {
 
 impl BarModule for Text {
     fn get_value(&self) -> String {
-        return self.text.to_string();
+        self.text.to_string()
     }
     fn get_timer(&self) -> u32 {
-        return u32::MAX;    
+        u32::MAX    
     }
 }
 
@@ -96,15 +96,15 @@ impl Mem {
             meminfo.insert(key.to_string(), value);
         };
 
-        return meminfo;
+        meminfo
     }
 
     fn get_div(&self) -> u64 {
-        return match self.unit {
+        match self.unit {
             MemoryUnit::KB => 1,
             MemoryUnit::MB => 1024,
             MemoryUnit::GB => 1048576 // 1024*1024
-        };
+        }
     }
 
     fn used(&self, meminfo: &HashMap<String, u64>) -> String {
@@ -112,12 +112,12 @@ impl Mem {
         // as defined in https://gitlab.com/procps-ng/procps/-/blob/newlib/free.c
         let mem_cached_all = meminfo["Cached"] + meminfo["SReclaimable"];
         let used = (meminfo["MemTotal"] - meminfo["Buffers"] - mem_cached_all - meminfo["MemFree"]) / div;
-        return used.to_string() + self.unit.as_str();
+        used.to_string() + self.unit.as_str()
     }
 
     fn total(&self, meminfo: &HashMap<String, u64>) -> String {
         let div: u64 = self.get_div(); 
-        return (meminfo["MemTotal"] / div).to_string() + self.unit.as_str();
+        (meminfo["MemTotal"] / div).to_string() + self.unit.as_str()
     }
 }
 
@@ -133,10 +133,10 @@ impl BarModule for Mem {
     }
 
     fn get_value(&self) -> String {
-        return self.parse_format(self.format.to_string());
+        self.parse_format(self.format.to_string())
     }
     fn get_timer(&self) -> u32 {
-        return self.refresh_rate;
+        self.refresh_rate
     }
 }
 
@@ -153,7 +153,7 @@ impl Cpu {
         let load_avg: Vec<&str> = load_avg.split_whitespace().collect();
 
         let oneminute_avg = load_avg[0].to_string();
-        return oneminute_avg;
+        oneminute_avg
     }
 }
 
@@ -166,11 +166,11 @@ impl BarModule for Cpu {
     }
 
     fn get_value(&self) -> String {
-        return self.parse_format(self.format.to_string());
+        self.parse_format(self.format.to_string())
     }
 
     fn get_timer(&self) -> u32 {
-        return self.refresh_rate;
+        self.refresh_rate
     }
 }
 
@@ -184,11 +184,11 @@ pub struct Color {
 
 impl Color {
     fn background(color: &str) -> String {
-        return String::from("^b") + color + "^";
+        String::from("^b") + color + "^"
     }
 
     fn foreground(color: &str) -> String {
-        return String::from("^c") + color + "^";
+        String::from("^c") + color + "^"
     }
 
 }
@@ -206,10 +206,10 @@ impl BarModule for Color {
                 &Color::foreground(&self.foreground.as_ref().unwrap())
             )
         }
-        return result;
+        result
     }
     fn get_timer(&self) -> u32 {
-        return u32::MAX
+        u32::MAX
     }
 }
 
@@ -217,10 +217,10 @@ pub struct ColorReset;
 
 impl BarModule for ColorReset {
     fn get_value(&self) -> String {
-        return "^d^".to_string();
+        "^d^".to_string()
     }
     fn get_timer(&self) -> u32 {
-        return u32::MAX;
+        u32::MAX
     }
 }
 
@@ -234,10 +234,10 @@ pub struct Clock {
 impl BarModule for Clock {
     fn get_value(&self) -> String {
         let date: DateTime<Local> = Local::now();
-        return date.format(&self.format).to_string();
+        date.format(&self.format).to_string()
     }
     fn get_timer(&self) -> u32 {
-        return self.refresh_rate;
+        self.refresh_rate
     }
 }
 
@@ -258,7 +258,7 @@ impl Updates {
             .expect("failed to get updates!");
         let updates = String::from_utf8_lossy(&updates.stdout);
         let update_count = updates.lines().count();
-        return update_count;
+        update_count
     }
 }
 
@@ -272,11 +272,11 @@ impl BarModule for Updates {
 
     fn get_value(&self) -> String {
         println!("Getting updates..");
-        return self.parse_format(self.format.to_string());
+        self.parse_format(self.format.to_string())
     }
 
     fn get_timer(&self) -> u32 {
-        return self.refresh_rate;
+        self.refresh_rate
     }
 }
 
@@ -295,9 +295,11 @@ impl BarModule for Wttr {
         let wttr = Command::new("curl").arg(location_format)
             .output().expect("weather check failed!");
         let wttr = String::from_utf8_lossy(&wttr.stdout).to_string();
-        return wttr;
+
+        wttr
     }
     fn get_timer(&self) -> u32 {
-        return self.refresh_rate;
+        self.refresh_rate
     }
 }
+
