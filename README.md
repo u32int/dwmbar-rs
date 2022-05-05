@@ -31,7 +31,7 @@ let modules: Vec<&dyn BarModule> = vec!{
         unit: MemoryUnit::MB,
     },
     &Clock {
-        format: "%m-%d %H:%M",
+        clock_format: "%m-%d %H:%M",
         refresh_rate: 1,
     },
 };
@@ -77,7 +77,7 @@ let modules: Vec<&dyn BarModule> = vec!{
     },
     &Color { background: Some("#d8d8d8"), foreground: Some("#000000"), },
     &Clock {
-        format: "%m-%d %H:%M",
+        clock_format: "%m-%d %H:%M",
         refresh_rate: 1,
     },
 };
