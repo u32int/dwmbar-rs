@@ -18,11 +18,16 @@ impl Cpu {
 }
 
 impl BarModule for Cpu {
-    fn get_func_output(&self, func: String) -> String { 
-        match func.as_str() {
-            "load" => self.average_load(),
-            _ => func,
-        }
+    fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
+	let evaled_keywords: Vec<String> = keywords.into_iter()
+	    .map(|keyword| {
+		match keyword {
+		    "load" => self.average_load(),
+		    _ => keyword.to_string(),
+		}
+	    }).collect();
+
+	evaled_keywords
     }
 
     fn get_value(&self) -> String {

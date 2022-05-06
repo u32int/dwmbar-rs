@@ -32,22 +32,16 @@ pub trait BarModule {
     fn get_value(&self) -> String;
     // get the module refresh rate
     fn get_timer(&self) -> u32;
-    // get the output of a specified function (probably using a match statement)
-    fn get_func_output(&self, _func: String) -> String { unimplemented!() }
+
+    // eval passed keywords and swap them for values if valid
+    fn eval_keywords(&self, _keywords: Vec<&str>) -> Vec<String> { unimplemented!() }
     // parse the supplied format
     fn parse_format(&self, format: String) -> String {
-        let mut result = String::new();
-        for keyword in get_keywords(format) {
-            result += self.get_func_output(keyword).as_str();
-        };
-        result
+	let keywords: Vec<&str> = format.split(&['{', '}']).collect();
+	let keywords = self.eval_keywords(keywords);
+	let mut ret = String::new();
+	keywords.into_iter()
+	    .for_each(|keyword| ret.push_str(keyword.as_str()));
+	ret
     }
-}
-
-pub fn get_keywords(format: String) -> Vec<String> {
-    let mut result: Vec<String> = Vec::new();
-    for part in format.split(&['{', '}']) {
-        result.push(part.to_string());
-    }
-    result
 }

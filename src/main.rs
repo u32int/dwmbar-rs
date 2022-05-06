@@ -10,22 +10,20 @@ static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
 fn main() {
     // -- CONFIGURATION -- 
 
-    // module definitions 
     // refresh_rate refers to how many bar refreshes (by default - 1000ms so seconds)
     // should happen before updating the value.
     let modules: Vec<&dyn BarModule> = vec!{
-        &Text { text: "dwmbar" },
-        &Mem {
-            format: "{used}",
-            refresh_rate: 5,
-            unit: MemoryUnit::MB,
-        },
-        &Clock {
-            clock_format: "%m-%d %H:%M",
-            refresh_rate: 1,
-        },
-   };
-
+	&Text { text: "dwmbar" },
+	&Mem {
+	    format: "{used}",
+	    refresh_rate: 5,
+	    unit: MemoryUnit::MB,
+	},
+	&Clock {
+	    clock_format: "%m-%d %H:%M",
+	    refresh_rate: 1,
+	},
+    };
     // Define your separator here (it will be inserted between modules, optional)
     // for no separator set it to ""
     let separator = " ";
@@ -39,7 +37,6 @@ fn main() {
 
     let mut timer = 0;
     loop {
-        // get new values
         let values = get_values(&modules, timer);
         // replace values in cache with new values if changed
         for i in 0..bar_cache.len() {
@@ -89,10 +86,8 @@ fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
 
 // Module structure
 mod modules {
-    // Barmodule definitions
     pub mod definitions;
 
-    // modules
     pub mod text;
     pub mod mem;
     pub mod cpu;

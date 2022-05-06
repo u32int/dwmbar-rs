@@ -50,14 +50,19 @@ impl Mem {
 }
 
 impl BarModule for Mem {
-    fn get_func_output(&self, func: String) -> String { 
-        let meminfo = self.gen_meminfo();
+    fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
+	let meminfo = self.gen_meminfo();
 
-        match func.as_str() {
-            "used" => self.used(&meminfo),
-            "total" => self.total(&meminfo),
-            _ => func,
-        }
+	let evaled_keywords: Vec<String> = keywords.into_iter()
+	    .map(|keyword| {
+		match keyword {
+		    "used" => self.used(&meminfo),
+		    "total" => self.total(&meminfo),
+		    _ => keyword.to_string()
+		}
+	    }).collect();
+
+	evaled_keywords
     }
 
     fn get_value(&self) -> String {

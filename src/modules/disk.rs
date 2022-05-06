@@ -35,16 +35,22 @@ impl Disk {
 }
 
 impl BarModule for Disk {
-    fn get_func_output(&self, func: String) -> String {
+    fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
 	let freemap = self.gen_freemap();
-	
-	match func.as_str() {
-	    "used" => freemap[&"used".to_string()].clone(),
-	    "avail" => freemap[&"available".to_string()].clone(),
-	    "total" => freemap[&"total".to_string()].clone(),
-	    _ => func,
-	}
+
+	let evaled_keywords: Vec<String> = keywords.into_iter()
+	    .map(|keyword| {
+		match keyword {
+		    "used" => freemap[&"used".to_string()].clone(),
+		    "avail" => freemap[&"available".to_string()].clone(),
+		    "total" => freemap[&"total".to_string()].clone(),
+		    _ => keyword.to_string()
+		}
+	    }).collect();
+
+	evaled_keywords
     }
+
     fn get_value(&self) -> String {
         self.parse_format(self.format.to_string())
     }

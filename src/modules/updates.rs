@@ -23,15 +23,20 @@ impl Updates {
 }
 
 impl BarModule for Updates {
-    fn get_func_output(&self, func: String) -> String { 
-        match func.as_str() {
-            "count" => self.get_update_count().to_string(),
-            _ => func,
-        }
+    fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
+	let evaled_keywords: Vec<String> = keywords.into_iter()
+	    .map(|keyword| {
+		match keyword {
+		    "count" => self.get_update_count().to_string(),
+		    _ => keyword.to_string(),
+		}
+	    }).collect();
+
+	evaled_keywords
     }
 
     fn get_value(&self) -> String {
-        println!("Getting updates..");
+        println!("getting updates..");
         self.parse_format(self.format.to_string())
     }
 
