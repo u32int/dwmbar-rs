@@ -4,7 +4,7 @@ use crate::BarModule;
 
 pub struct Cpu {
     pub format: &'static str,
-    pub refresh_rate: u32,
+    pub update_interval: u32,
 }
 
 impl Cpu {
@@ -35,6 +35,6 @@ impl BarModule for Cpu {
     }
 
     fn get_timer(&self) -> u32 {
-        self.refresh_rate
+        self.update_interval
     }
 }

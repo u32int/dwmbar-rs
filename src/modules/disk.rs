@@ -8,7 +8,7 @@ pub struct Disk {
     pub format: &'static str,
     pub dir: &'static str,
     pub unit: MemoryUnit,
-    pub refresh_rate: u32,
+    pub update_interval: u32,
 }
 
 impl Disk {
@@ -55,6 +55,6 @@ impl BarModule for Disk {
         self.parse_format(self.format.to_string())
     }
     fn get_timer(&self) -> u32 {
-	self.refresh_rate
+	self.update_interval
     }
 }

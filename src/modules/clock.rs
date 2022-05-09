@@ -5,7 +5,7 @@ use crate::BarModule;
 
 pub struct Clock {
     pub clock_format: &'static str,
-    pub refresh_rate: u32,
+    pub update_interval: u32,
 }
 
 impl BarModule for Clock {
@@ -14,6 +14,6 @@ impl BarModule for Clock {
         date.format(&self.clock_format).to_string()
     }
     fn get_timer(&self) -> u32 {
-        self.refresh_rate
+        self.update_interval
     }
 }

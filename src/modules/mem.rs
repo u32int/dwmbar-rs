@@ -5,7 +5,7 @@ use crate::{BarModule, MemoryUnit};
 
 pub struct Mem {
     pub format: &'static str,
-    pub refresh_rate: u32,
+    pub update_interval: u32,
     pub unit: MemoryUnit,
 }
 
@@ -69,6 +69,6 @@ impl BarModule for Mem {
         self.parse_format(self.format.to_string())
     }
     fn get_timer(&self) -> u32 {
-        self.refresh_rate
+        self.update_interval
     }
 }

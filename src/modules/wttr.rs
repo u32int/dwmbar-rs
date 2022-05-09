@@ -4,7 +4,7 @@ use crate::BarModule;
 
 pub struct Wttr {
     pub location: &'static str,
-    pub refresh_rate: u32,
+    pub update_interval: u32,
 }
 
 impl BarModule for Wttr {
@@ -19,6 +19,6 @@ impl BarModule for Wttr {
         wttr
     }
     fn get_timer(&self) -> u32 {
-        self.refresh_rate
+        self.update_interval
     }
 }

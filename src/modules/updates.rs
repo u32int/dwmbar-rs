@@ -8,7 +8,7 @@ pub struct Updates {
     // It needs to be a command that outputs all available updates
     // one per line to stdout.
     pub update_cmd: &'static str,
-    pub refresh_rate: u32,
+    pub update_interval: u32,
 }
 
 impl Updates {
@@ -41,6 +41,6 @@ impl BarModule for Updates {
     }
 
     fn get_timer(&self) -> u32 {
-        self.refresh_rate
+        self.update_interval
     }
 }
