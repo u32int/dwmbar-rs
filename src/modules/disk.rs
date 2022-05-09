@@ -41,7 +41,9 @@ impl BarModule for Disk {
 	let evaled_keywords: Vec<String> = keywords.into_iter()
 	    .map(|keyword| {
 		match keyword {
+		    "icon" => String::from(""),
 		    "used" => freemap[&"used".to_string()].clone(),
+		    "used_percent" => freemap[&"use_percent".to_string()].clone(),
 		    "avail" => freemap[&"available".to_string()].clone(),
 		    "total" => freemap[&"total".to_string()].clone(),
 		    _ => keyword.to_string()

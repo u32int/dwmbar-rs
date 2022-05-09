@@ -36,7 +36,6 @@ impl BarModule for Updates {
     }
 
     fn get_value(&self) -> String {
-        println!("getting updates..");
         self.parse_format(self.format.to_string())
     }
 
