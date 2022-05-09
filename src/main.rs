@@ -9,19 +9,17 @@ static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
 
 fn main() {
     // -- CONFIGURATION -- 
-
-    // refresh_rate refers to how many bar refreshes (by default - 1000ms so seconds)
-    // should happen before updating the value.
+    // update_interval = wait for n times BAR_REFRESH_RATE_MILIS before updating
     let modules: Vec<&dyn BarModule> = vec!{
 	&Text { text: "dwmbar" },
 	&Mem {
 	    format: "{used}",
-	    refresh_rate: 5,
+	    update_interval: 5,
 	    unit: MemoryUnit::MB,
 	},
 	&Clock {
 	    clock_format: "%m-%d %H:%M",
-	    refresh_rate: 1,
+	    update_interval: 1,
 	},
     };
     // Define your separator here (it will be inserted between modules, optional)
@@ -106,4 +104,3 @@ macro_rules! autousemod {
     };
 }
 autousemod![definitions, text, mem, cpu, clock, color, updates, wttr, disk];
-
