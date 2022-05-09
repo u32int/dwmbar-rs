@@ -27,12 +27,12 @@ let modules: Vec<&dyn BarModule> = vec!{
     &Text { text: "dwmbar" },
     &Mem {
         format: "{used}",
-        refresh_rate: 5,
+        update_interval: 5,
         unit: MemoryUnit::MB,
     },
     &Clock {
         clock_format: "%m-%d %H:%M",
-        refresh_rate: 1,
+        update_interval: 1,
     },
 };
 
@@ -50,14 +50,14 @@ let modules: Vec<&dyn BarModule> = vec!{
     &Color { background: None, foreground: Some("#d8d8d8"), },
     &Wttr {
         location: "Warsaw",
-        refresh_rate: 3600,
+        update_interval: 3600,
     },
     &Color { background: None, foreground: Some("#787878"), },
     &Text { text: "UPD" },
     &Color { background: None, foreground: Some("#d8d8d8"), },
     &Updates {
         format: "{count}",
-        refresh_rate: 7200,
+        update_interval: 7200,
         update_cmd: "checkupdates",
     },
     &Color { background: None, foreground: Some("#787878"), },
@@ -65,7 +65,7 @@ let modules: Vec<&dyn BarModule> = vec!{
     &Color { background: None, foreground: Some("#d8d8d8"), },
     &Mem {
         format: "{used}",
-        refresh_rate: 5,
+        update_interval: 5,
         unit: MemoryUnit::MB,
     },
     &Color { background: None, foreground: Some("#787878"), },
@@ -73,12 +73,12 @@ let modules: Vec<&dyn BarModule> = vec!{
     &Color { background: None, foreground: Some("#d8d8d8"), },
     &Cpu {
         format: "{load}",
-        refresh_rate: 1,
+        update_interval: 1,
     },
     &Color { background: Some("#d8d8d8"), foreground: Some("#000000"), },
     &Clock {
         clock_format: "%m-%d %H:%M",
-        refresh_rate: 1,
+        update_interval: 1,
     },
 };
 
