@@ -95,6 +95,7 @@ mod modules {
     pub mod wttr;
     pub mod disk;
     pub mod spotify;
+    pub mod osinfo;
 }
 // This shortens the use statements a bit.
 macro_rules! autousemod {
@@ -104,4 +105,5 @@ macro_rules! autousemod {
 	)+
     };
 }
-autousemod![definitions, text, mem, cpu, clock, color, updates, wttr, disk, spotify];
+autousemod![definitions, text, mem, cpu, clock, color, updates, wttr, disk, spotify,
+	    osinfo];
