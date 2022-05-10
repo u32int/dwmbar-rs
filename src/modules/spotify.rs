@@ -93,11 +93,16 @@ impl BarModule for Spotify {
 	keywords.into_iter()
 	    .for_each(|keyword| ret.push_str(keyword.as_str()));
 
-	if ret.len() > self.crop_threshold {
+	// This is not very efficient but fixes panicking on multi-byte characters
+	// (like icons or non-roman alphabets)
+	let ret_chars = ret.chars().collect::<Vec<char>>();
+	if ret_chars.len() > self.crop_threshold + ICON_COLORED.len() - 2 {
 	    if has_colored_logo {
-		ret = String::from(&ret[..self.crop_threshold + ICON_COLORED.len() - 2]) + "..";
+		ret = ret_chars[..self.crop_threshold + ICON_COLORED.len() - 2]
+		    .iter().collect::<String>() + "..";
 	    } else {
-		ret = String::from(&ret[..self.crop_threshold]);
+		ret = ret_chars[..self.crop_threshold - 2]
+		    .iter().collect::<String>() + "..";
 	    }
 	}
 
