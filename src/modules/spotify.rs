@@ -10,9 +10,13 @@ use crate::BarModule;
 // some kind of a cache system to at least keep the connection open instead
 // of reopening it every n seconds (or maybe its just fine?).
 
+const ICON: &str = "";
+const ICON_COLORED: &str = "^c#1ed760^^d^";
+
 pub struct Spotify {
     pub playing_format: &'static str,
     pub idle_string: &'static str,
+    pub crop_threshold: usize,
     pub update_interval: u32,
 }
 
@@ -44,19 +48,17 @@ impl Spotify {
 	let album: Option<&String> = arg::prop_cast(&metadata, "xesam:album");
 	let title: Option<&String> = arg::prop_cast(&metadata, "xesam:title");
 
+	let process_meta = |item: Option<&String>| -> String {
+	    match item {
+		Some(item) => item.to_owned(),
+		None => "..".to_owned(),
+	    }
+	};
+
 	SpotifyMeta {
-	    artist: match artist {
-		Some(artist) => artist[0].to_owned(),
-		None => "..".to_owned(),
-	    },
-	    album: match album {
-		Some(album) => album.to_owned(),
-		None => "..".to_owned(),
-	    },
-	    title:  match title {
-		Some(title) => title.to_owned(),
-		None => "..".to_owned(),
-	    },
+	    artist: process_meta(Some(&artist.unwrap()[0])),
+	    album: process_meta(album),
+	    title: process_meta(title),
 	}
     }
     fn spotify_eval_keywords(&self, keywords: Vec<&str>, meta: SpotifyMeta) -> Vec<String> {
@@ -64,8 +66,8 @@ impl Spotify {
 	let evaled_keywords: Vec<String> = keywords.into_iter()
 	    .map(|keyword| {
 		match keyword {
-		    "icon" => String::from(""),
-		    "icon_colored" => String::from("^c#1ed760^^d^"),
+		    "icon" => String::from(ICON),
+		    "icon_colored" => String::from(ICON_COLORED),
 		    "artist" => meta.artist.clone(),
 		    "album" => meta.album.clone(),
 		    "title" => meta.title.clone(),
@@ -80,6 +82,7 @@ impl Spotify {
 impl BarModule for Spotify {
     fn parse_format(&self, format: String) -> String {
 	let keywords: Vec<&str> = format.split(&['{', '}']).collect();
+	let has_colored_logo = keywords.contains(&"icon_colored");
 	let meta = self.get_metadata();
 	if meta.title == ".." {
 	    return String::from(self.idle_string);
@@ -89,6 +92,15 @@ impl BarModule for Spotify {
 	let mut ret = String::new();
 	keywords.into_iter()
 	    .for_each(|keyword| ret.push_str(keyword.as_str()));
+
+	if ret.len() > self.crop_threshold {
+	    if has_colored_logo {
+		ret = String::from(&ret[..self.crop_threshold + ICON_COLORED.len() - 2]) + "..";
+	    } else {
+		ret = String::from(&ret[..self.crop_threshold]);
+	    }
+	}
+
 	ret
     }
     
