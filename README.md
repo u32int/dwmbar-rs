@@ -98,6 +98,8 @@ and would result in a bar looking like this
 
 - [ ] Many more modules
 
+- [ ] Async?
+
 ### Contributing
 
 If you write a useful module or extend the programs existing functionality, feel free to send a pull request.
