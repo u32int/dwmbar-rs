@@ -1,6 +1,6 @@
 #![allow(unused_imports)]
 
-use std::{thread, time};
+use std::{thread, time, process::exit};
 use std::process::Command;
 
 
@@ -28,6 +28,22 @@ fn main() {
 
     // -- end CONFIGURATION -- 
 
+    // Check if another instance of dwmbar is running
+    let out = Command::new("ps").arg("x")
+	.output()
+	.expect("ps command failed.");
+    let out = String::from_utf8_lossy(&out.stdout);
+    let mut self_detected = false;
+    for line in out.lines() {
+	if line.contains("dwmbar") {
+	    if !self_detected {
+		self_detected = true;
+	    } else {
+		println!("Another instance of dwmbar is already running!\nExiting.");
+		exit(0);
+	    }
+	}
+    }
 
     // Build the cache of last known values
     let mut bar_cache: Vec<String> = Vec::new();
