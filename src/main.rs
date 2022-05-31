@@ -1,53 +1,55 @@
 #![allow(unused_imports)]
 
-use std::{thread, time, process::exit};
 use std::process::Command;
+use std::{process::exit, thread, time};
 
-
-// -- General settings -- 
+// -- General settings --
 static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
 
 fn main() {
-    // -- CONFIGURATION -- 
+    // -- CONFIGURATION --
     // update_interval = wait for n times BAR_REFRESH_RATE_MILIS before updating
-    let modules: Vec<&dyn BarModule> = vec!{
-	&Text { text: "dwmbar" },
-	&Mem {
-	    format: "{used}",
-	    update_interval: 5,
-	    unit: MemoryUnit::MB,
-	},
-	&Clock {
-	    clock_format: "%m-%d %H:%M",
-	    update_interval: 1,
-	},
-    };
+    let modules: Vec<&dyn BarModule> = vec![
+        &Text { text: "dwmbar" },
+        &Mem {
+            format: "{used}",
+            update_interval: 5,
+            unit: MemoryUnit::MB,
+        },
+        &Clock {
+            clock_format: "%m-%d %H:%M",
+            update_interval: 1,
+        },
+    ];
     // Define your separator here (it will be inserted between modules, optional)
     // for no separator set it to ""
     let separator = " ";
 
-    // -- end CONFIGURATION -- 
+    // -- end CONFIGURATION --
 
     // Check if another instance of dwmbar is running
-    let out = Command::new("ps").arg("x")
-	.output()
-	.expect("ps command failed.");
+    let out = Command::new("ps")
+        .arg("x")
+        .output()
+        .expect("ps command failed.");
     let out = String::from_utf8_lossy(&out.stdout);
     let mut self_detected = false;
     for line in out.lines() {
-	if line.contains("dwmbar") {
-	    if !self_detected {
-		self_detected = true;
-	    } else {
-		println!("Another instance of dwmbar is already running!\nExiting.");
-		exit(0);
-	    }
-	}
+        if line.contains("dwmbar") {
+            if !self_detected {
+                self_detected = true;
+            } else {
+                println!("Another instance of dwmbar is already running!\nExiting.");
+                exit(0);
+            }
+        }
     }
 
     // Build the cache of last known values
     let mut bar_cache: Vec<String> = Vec::new();
-    for _ in &modules { bar_cache.push("".to_owned()); }
+    for _ in &modules {
+        bar_cache.push("".to_owned());
+    }
 
     let mut timer = 0;
     loop {
@@ -61,7 +63,11 @@ fn main() {
         // convert bar_cache: Vec<String> -> bar: String
         let bar = vec_to_string(&bar_cache, Some(separator));
         // set the bar
-        match Command::new("xsetroot").arg("-name").arg(bar.as_str()).spawn() {
+        match Command::new("xsetroot")
+            .arg("-name")
+            .arg(bar.as_str())
+            .spawn()
+        {
             Ok(mut child) => child.wait().expect("process already over."),
             Err(e) => {
                 println!("Something went wrong with cmd\nxsetroot -name {}\n", &bar);
@@ -75,7 +81,7 @@ fn main() {
 
 fn vec_to_string(cache: &Vec<String>, separator: Option<&'static str>) -> String {
     let mut result = String::new();
-    for elem in cache  {
+    for elem in cache {
         result.push_str(elem.as_str());
         if separator.is_some() && elem != cache.last().expect("Error: vector has no last element") {
             result.push_str(separator.unwrap());
@@ -83,7 +89,6 @@ fn vec_to_string(cache: &Vec<String>, separator: Option<&'static str>) -> String
     }
     return result;
 }
-
 
 // Update module values if timer matches refresh rate
 fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
@@ -102,16 +107,16 @@ fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
 mod modules {
     pub mod definitions;
 
-    pub mod text;
-    pub mod mem;
-    pub mod cpu;
     pub mod clock;
     pub mod color;
+    pub mod cpu;
+    pub mod disk;
+    pub mod mem;
+    pub mod osinfo;
+    pub mod spotify;
+    pub mod text;
     pub mod updates;
     pub mod wttr;
-    pub mod disk;
-    pub mod spotify;
-    pub mod osinfo;
 }
 // This shortens the use statements a bit.
 macro_rules! autousemod {
@@ -121,5 +126,16 @@ macro_rules! autousemod {
 	)+
     };
 }
-autousemod![definitions, text, mem, cpu, clock, color, updates, wttr, disk, spotify,
-	    osinfo];
+autousemod![
+    definitions,
+    text,
+    mem,
+    cpu,
+    clock,
+    color,
+    updates,
+    wttr,
+    disk,
+    spotify,
+    osinfo
+];

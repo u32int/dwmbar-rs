@@ -2,7 +2,6 @@ use std::process::Command;
 
 use crate::BarModule;
 
-
 pub struct Updates {
     pub format: &'static str,
     // It needs to be a command that outputs all available updates
@@ -24,15 +23,15 @@ impl Updates {
 
 impl BarModule for Updates {
     fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
-	let evaled_keywords: Vec<String> = keywords.into_iter()
-	    .map(|keyword| {
-		match keyword {
-		    "count" => self.get_update_count().to_string(),
-		    _ => keyword.to_string(),
-		}
-	    }).collect();
+        let evaled_keywords: Vec<String> = keywords
+            .into_iter()
+            .map(|keyword| match keyword {
+                "count" => self.get_update_count().to_string(),
+                _ => keyword.to_string(),
+            })
+            .collect();
 
-	evaled_keywords
+        evaled_keywords
     }
 
     fn get_value(&self) -> String {

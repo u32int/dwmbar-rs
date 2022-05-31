@@ -2,7 +2,9 @@ use std::fmt;
 
 #[allow(dead_code)]
 pub enum MemoryUnit {
-    KB, MB, GB,
+    KB,
+    MB,
+    GB,
 }
 
 impl MemoryUnit {
@@ -26,7 +28,6 @@ impl fmt::Display for MemoryUnit {
     }
 }
 
-
 pub trait BarModule {
     // get the final value from format
     fn get_value(&self) -> String;
@@ -34,14 +35,17 @@ pub trait BarModule {
     fn get_timer(&self) -> u32;
 
     // eval passed keywords and swap them for values if valid
-    fn eval_keywords(&self, _keywords: Vec<&str>) -> Vec<String> { unimplemented!() }
+    fn eval_keywords(&self, _keywords: Vec<&str>) -> Vec<String> {
+        unimplemented!()
+    }
     // parse the supplied format
     fn parse_format(&self, format: String) -> String {
-	let keywords: Vec<&str> = format.split(&['{', '}']).collect();
-	let keywords = self.eval_keywords(keywords);
-	let mut ret = String::new();
-	keywords.into_iter()
-	    .for_each(|keyword| ret.push_str(keyword.as_str()));
-	ret
+        let keywords: Vec<&str> = format.split(&['{', '}']).collect();
+        let keywords = self.eval_keywords(keywords);
+        let mut ret = String::new();
+        keywords
+            .into_iter()
+            .for_each(|keyword| ret.push_str(keyword.as_str()));
+        ret
     }
 }

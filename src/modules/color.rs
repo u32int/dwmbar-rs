@@ -13,21 +13,16 @@ impl Color {
     fn foreground(color: &str) -> String {
         String::from("^c") + color + "^"
     }
-
 }
 
 impl BarModule for Color {
     fn get_value(&self) -> String {
         let mut result = String::new();
         if self.background.is_some() {
-            result.push_str(
-                &Color::background(&self.background.as_ref().unwrap())
-            )
+            result.push_str(&Color::background(&self.background.as_ref().unwrap()))
         }
         if self.foreground.is_some() {
-            result.push_str(
-                &Color::foreground(&self.foreground.as_ref().unwrap())
-            )
+            result.push_str(&Color::foreground(&self.foreground.as_ref().unwrap()))
         }
         result
     }

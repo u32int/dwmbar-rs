@@ -2,7 +2,6 @@ use chrono::{DateTime, Local};
 
 use crate::BarModule;
 
-
 pub struct Clock {
     pub clock_format: &'static str,
     pub update_interval: u32,

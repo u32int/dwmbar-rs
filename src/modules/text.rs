@@ -9,6 +9,6 @@ impl BarModule for Text {
         self.text.to_string()
     }
     fn get_timer(&self) -> u32 {
-        u32::MAX    
+        u32::MAX
     }
 }

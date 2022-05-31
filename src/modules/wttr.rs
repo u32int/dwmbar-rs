@@ -36,9 +36,12 @@ pub struct Wttr {
 
 impl Wttr {
     fn get_wttr(&self) -> String {
-	let location_format = String::from("wttr.in/") + self.location + "\\?format=" + self.wttr_format; 
-        let wttr = Command::new("curl").arg(location_format)
-            .output().expect("weather check failed!");
+        let location_format =
+            String::from("wttr.in/") + self.location + "\\?format=" + self.wttr_format;
+        let wttr = Command::new("curl")
+            .arg(location_format)
+            .output()
+            .expect("weather check failed!");
         let wttr = String::from_utf8_lossy(&wttr.stdout).to_string();
 
         wttr
@@ -47,15 +50,15 @@ impl Wttr {
 
 impl BarModule for Wttr {
     fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
-	let evaled_keywords: Vec<String> = keywords.into_iter()
-	    .map(|keyword| {
-		match keyword {
-		    "weather" => self.get_wttr(),
-		    _ => keyword.to_string(),
-		}
-	    }).collect();
+        let evaled_keywords: Vec<String> = keywords
+            .into_iter()
+            .map(|keyword| match keyword {
+                "weather" => self.get_wttr(),
+                _ => keyword.to_string(),
+            })
+            .collect();
 
-	evaled_keywords
+        evaled_keywords
     }
 
     fn get_value(&self) -> String {
