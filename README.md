@@ -49,9 +49,10 @@ let modules: Vec<&dyn BarModule> = vec!{
     &Text { text: "WTR" },
     &Color { background: None, foreground: Some("#d8d8d8"), },
     &Wttr {
+        format: "{weather}",
         location: "Warsaw",
         update_interval: 3600,
-        format: "%C+%t",
+        wttr_format: "%C+%t",
     },
     &Color { background: None, foreground: Some("#787878"), },
     &Text { text: "UPD" },
