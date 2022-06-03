@@ -3,6 +3,20 @@
 use std::process::Command;
 use std::{process::exit, thread, time};
 
+mod modules;
+use modules::{
+    clock::Clock,
+    color::{Color, ColorReset},
+    cpu::Cpu,
+    definitions::*,
+    disk::Disk,
+    mem::Mem,
+    osinfo::OsInfo,
+    text::Text,
+    updates::Updates,
+    wttr::Wttr,
+};
+
 // -- General settings --
 static BAR_REFRESH_RATE_MILIS: u64 = 1000; // Bar refresh rate in milliseconds.
 
@@ -79,7 +93,7 @@ fn main() {
     }
 }
 
-fn vec_to_string(cache: &Vec<String>, separator: Option<&'static str>) -> String {
+fn vec_to_string(cache: &Vec<String>, separator: Option<&str>) -> String {
     let mut result = String::new();
     for elem in cache {
         result.push_str(elem.as_str());
@@ -102,40 +116,3 @@ fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
     }
     return constructed;
 }
-
-// Module structure
-mod modules {
-    pub mod definitions;
-
-    pub mod clock;
-    pub mod color;
-    pub mod cpu;
-    pub mod disk;
-    pub mod mem;
-    pub mod osinfo;
-    pub mod spotify;
-    pub mod text;
-    pub mod updates;
-    pub mod wttr;
-}
-// This shortens the use statements a bit.
-macro_rules! autousemod {
-    ($($module:ident),+) => {
-	$(
-	    use modules::$module::*;
-	)+
-    };
-}
-autousemod![
-    definitions,
-    text,
-    mem,
-    cpu,
-    clock,
-    color,
-    updates,
-    wttr,
-    disk,
-    spotify,
-    osinfo
-];

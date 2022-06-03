@@ -1,0 +1,11 @@
+pub mod clock;
+pub mod color;
+pub mod cpu;
+pub mod definitions;
+pub mod disk;
+pub mod mem;
+pub mod osinfo;
+pub mod spotify;
+pub mod text;
+pub mod updates;
+pub mod wttr;
