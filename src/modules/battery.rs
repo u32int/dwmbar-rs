@@ -17,7 +17,7 @@ impl BarModule for Battery {
         let evaled_keywords: Vec<String> = keywords
             .into_iter()
             .map(|keyword| match keyword {
-                "percentage" => bat.state_of_charge().get::<percent>().to_string(),
+                "percentage" => bat.state_of_charge().get::<percent>().round().to_string(),
                 "time_to_empty" => {
 		    if let Some(tto) = bat.time_to_empty() {
 			(tto.get::<minute>().round()).to_string()
