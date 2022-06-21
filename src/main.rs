@@ -5,6 +5,7 @@ use std::{process::exit, thread, time};
 
 mod modules;
 use modules::{
+    battery::Battery,
     clock::Clock,
     color::{Color, ColorReset},
     cpu::Cpu,
