@@ -19,24 +19,43 @@ impl BarModule for Battery {
             .map(|keyword| match keyword {
                 "percentage" => bat.state_of_charge().get::<percent>().round().to_string(),
                 "time_to_empty" => {
-		    if let Some(tto) = bat.time_to_empty() {
-			(tto.get::<minute>().round()).to_string()
-		    } else {
-			"-".to_string()
-		    }
-		}
-		"state" => bat.state().to_string(),
-		"state_icon" => {
-		    use battery::State::*;
-		    match bat.state() {
-			Unknown => "".to_string(),
-			Charging => "".to_string(),
-			Discharging => "".to_string(),
-			Full => "".to_string(),
-			Empty => "".to_string(),
-			_ => "".to_string(),
-		    }
-		}
+                    if let Some(tto) = bat.time_to_empty() {
+                        tto.get::<minute>().round().to_string()
+                    } else {
+                        "-".to_string()
+                    }
+                }
+                "time_to_full" => {
+                    if let Some(ttf) = bat.time_to_full() {
+                        ttf.get::<minute>().round().to_string()
+                    } else {
+                        "-".to_string()
+                    }
+                }
+                "time_to_full_or_empty" => {
+                    use battery::State::*;
+                    let state = bat.state();
+                    if let Some(time) = match state {
+                        Charging => bat.time_to_full(),
+                        _ => bat.time_to_empty(),
+                    } {
+                        time.get::<minute>().round().to_string()
+                    } else {
+                        "-".to_string()
+                    }
+                }
+                "state" => bat.state().to_string(),
+                "state_icon" => {
+                    use battery::State::*;
+                    match bat.state() {
+                        Unknown => "".to_string(),
+                        Charging => "".to_string(),
+                        Discharging => "".to_string(),
+                        Full => "".to_string(),
+                        Empty => "".to_string(),
+                        _ => "".to_string(),
+                    }
+                }
                 _ => keyword.to_string(),
             })
             .collect();
