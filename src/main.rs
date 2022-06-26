@@ -71,7 +71,7 @@ fn main() {
         let values = get_values(&modules, timer);
         // replace values in cache with new values if changed
         for i in 0..bar_cache.len() {
-            if values[i] != bar_cache[i] && values[i] != "" {
+            if values[i] != bar_cache[i] && !values[i].is_empty() {
                 bar_cache[i] = values[i].clone();
             }
         }
@@ -102,7 +102,7 @@ fn vec_to_string(cache: &Vec<String>, separator: Option<&str>) -> String {
             result.push_str(separator.unwrap());
         }
     }
-    return result;
+    result
 }
 
 // Update module values if timer matches refresh rate
@@ -115,5 +115,5 @@ fn get_values(modules: &Vec<&dyn BarModule>, timer: u32) -> Vec<String> {
             constructed.push("".to_string());
         }
     }
-    return constructed;
+    constructed
 }

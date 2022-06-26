@@ -28,8 +28,8 @@ impl Mem {
         // the information using key-value
         for line in lines {
             let mut line_split = line.split_whitespace();
-            let key = line_split.nth(0).unwrap().strip_suffix(":").unwrap();
-            let value = line_split.nth(0).unwrap().parse::<u64>().unwrap();
+            let key = line_split.next().unwrap().strip_suffix(':').unwrap();
+            let value = line_split.next().unwrap().parse::<u64>().unwrap();
             meminfo.insert(key.to_string(), value / div);
         }
 

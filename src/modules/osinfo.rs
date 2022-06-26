@@ -28,7 +28,7 @@ impl OsInfo {
         let uptime_file = fs::read_to_string("/proc/uptime").expect("Couldn't read /proc/uptime");
         let seconds = uptime_file
             .split_whitespace()
-            .nth(0)
+            .next()
             .unwrap()
             .parse::<f32>()
             .unwrap() as u32;

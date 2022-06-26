@@ -11,7 +11,7 @@ impl BarModule for Battery {
     fn eval_keywords(&self, keywords: Vec<&str>) -> Vec<String> {
         let bat = Manager::new().unwrap()
             .batteries().unwrap()
-            .nth(0).unwrap()
+            .next().unwrap()
             .unwrap();
 
         let evaled_keywords: Vec<String> = keywords

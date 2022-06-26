@@ -10,7 +10,7 @@ pub struct Clock {
 impl BarModule for Clock {
     fn get_value(&self) -> String {
         let date: DateTime<Local> = Local::now();
-        date.format(&self.clock_format).to_string()
+        date.format(self.clock_format).to_string()
     }
     fn get_timer(&self) -> u32 {
         self.update_interval
