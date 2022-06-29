@@ -10,3 +10,4 @@ pub mod spotify;
 pub mod text;
 pub mod updates;
 pub mod wttr;
+pub mod temp;

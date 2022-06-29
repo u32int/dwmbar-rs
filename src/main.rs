@@ -3,6 +3,7 @@
 use std::process::Command;
 use std::{process::exit, thread, time};
 
+mod config;
 mod modules;
 use modules::{
     battery::Battery,
@@ -16,6 +17,7 @@ use modules::{
     text::Text,
     updates::Updates,
     wttr::Wttr,
+    temp::Temp,
 };
 
 // -- General settings --
