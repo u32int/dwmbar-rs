@@ -3,7 +3,6 @@
 use std::process::Command;
 use std::{process::exit, thread, time};
 
-mod config;
 mod modules;
 use modules::{
     battery::Battery,
@@ -56,8 +55,8 @@ fn main() {
             if !self_detected {
                 self_detected = true;
             } else {
-                println!("Another instance of dwmbar is already running!\nExiting.");
-                exit(0);
+                eprintln!("Another instance of dwmbar is already running!\nExiting.");
+                exit(1);
             }
         }
     }
@@ -87,7 +86,7 @@ fn main() {
         {
             Ok(mut child) => child.wait().expect("process already over."),
             Err(e) => {
-                println!("Something went wrong with cmd\nxsetroot -name {}\n", &bar);
+                eprintln!("Something went wrong with cmd\nxsetroot -name {}\n", &bar);
                 panic!("{}", e);
             }
         };
